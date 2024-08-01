@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { env } from 'process';
 
 export const initMongoConnection = async () => {
   try {
@@ -13,7 +12,6 @@ export const initMongoConnection = async () => {
     );
     console.log('Mongo connection successfully established!');
   } catch (error) {
-    console.log('Error while setting up mongo connection', error);
-    throw error;
+    console.error('Error while setting up mongo connection');
   }
 };
