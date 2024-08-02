@@ -2,6 +2,7 @@ import express from "express";
 import cors from 'cors'
 import pinoHTTP from "pino-http";
 import { Contact } from "./models/contact.js";
+// import { getAllContacts } from "./services/contacts";
 
 export const setupServer = () => {
 
@@ -18,6 +19,7 @@ export const setupServer = () => {
             optionsSuccessStatus: 200,
         }),
         );
+
 
         app.get('/contacts', async (req, res) => {
             try {
