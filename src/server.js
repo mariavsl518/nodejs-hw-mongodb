@@ -23,7 +23,7 @@ export const setupServer = () => {
         app.get('/contacts', async (req, res) => {
             try {
 
-                getAllContacts()
+                const contacts = await getAllContacts()
 
                 res.send({
                     status: 200,
@@ -42,9 +42,8 @@ export const setupServer = () => {
             try {
 
                 const { contactId } = req.params;
-                console.log(req.params);
 
-                getContactById()
+                const contact = await getContactById(contactId)
 
                 if (contact === null) {
                     return res
