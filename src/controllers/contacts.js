@@ -6,6 +6,7 @@ import {
     updateContact
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
+import { notFoundHandler } from '../middlewares/notFoundHandler.js';
 
 export async function getContactsController (req, res) {
 
@@ -24,7 +25,7 @@ export async function getContactController(req, res, next) {
 
                 const contact = await getContactById(contactId)
 
-                if (contact === null) {
+            if (contact === null) {
                     return next(createHttpError.NotFound("Contact not found"))
                 }
 
