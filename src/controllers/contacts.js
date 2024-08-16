@@ -6,6 +6,7 @@ import {
     updateContact
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
+import { contactSchema } from '../validation/student.js';
 
 export async function getContactsController (req, res) {
 
@@ -44,7 +45,9 @@ export async function createContactController (req, res, next) {
         contactType: req.body.contactType,
     }
 
-    const newContact = await createContact(contact)
+    const result = contactSchema.validate(contact, { abortEarly: false })
+
+    const newContact = await createContact(result.value)
 
     res.status(201).send({status: 201, message:"Successfully created a contact!", data: newContact})
 }
