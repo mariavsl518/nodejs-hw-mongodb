@@ -6,7 +6,6 @@ import {
     updateContact
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
-import { notFoundHandler } from '../middlewares/notFoundHandler.js';
 
 export async function getContactsController (req, res) {
 
@@ -21,9 +20,9 @@ export async function getContactsController (req, res) {
 
 export async function getContactController(req, res, next) {
 
-                const { contactId } = req.params;
+            const { contactId } = req.params;
 
-                const contact = await getContactById(contactId)
+            const contact = await getContactById(contactId)
 
             if (contact === null) {
                     return next(createHttpError.NotFound("Contact not found"))
@@ -47,6 +46,8 @@ export async function createContactController (req, res, next) {
 
     const newContact = await createContact(contact)
 
+    console.log(newContact);
+
     res.status(201).send({status: 201, message:"Successfully created a contact!", data: newContact})
 }
 
@@ -62,8 +63,6 @@ export async function updateContactController(req, res, next) {
     }
 
     const updatedContact = await updateContact(contactId, contact)
-
-    console.log(updatedContact);
 
     res.status(200).send({	status: 200, message: "Successfully patched a contact!", data:updatedContact})
 

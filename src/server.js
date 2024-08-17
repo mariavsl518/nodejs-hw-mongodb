@@ -3,6 +3,7 @@ import pinoHTTP from "pino-http";
 import cors from 'cors'
 import contactsRoutes from "./routers/contacts.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
 
 export const setupServer = () => {
 
@@ -18,9 +19,10 @@ export const setupServer = () => {
         }),
         );
 
-    app.use('/contacts', contactsRoutes)
+    app.use('/contacts', errorHandler, contactsRoutes)
 
-    app.use('*', notFoundHandler)
+    app.use(notFoundHandler)
+    app.use('*', errorHandler)
 
     app.listen(PORT, () =>{
            console.log(`Server is runnimg on port ${PORT}`)
