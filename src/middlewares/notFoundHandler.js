@@ -1,17 +1,7 @@
-import { isHttpError } from "http-errors";
+export async function notFoundHandler(req, res, next) {
 
-export async function notFoundHandler(error, req, res, next) {
-    if (isHttpError(error) === true) {
-        return res.status(error.status).send({
-            status: error.status,
-            message: error.message,
+        res.status(404).send({
+            status: 404,
+            message: 'Not found',
         })
-    }
-    console.error(error);
-
-    res.status(500).send({
-        status: 500,
-        message: "Something went wrong",
-        data: error.message,
-    });
 }
