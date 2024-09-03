@@ -24,6 +24,10 @@ const contactSchema = new mongoose.Schema(
             required: true,
             default: true,
         },
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+        }
     },
     {
         timestamps: true,

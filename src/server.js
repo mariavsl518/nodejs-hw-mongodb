@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from 'cors'
 import contactsRoutes from "./routers/contacts.js";
 import authRoutes from './routers/auth.js'
+import { authenticate } from "./middlewares/authenticate.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
@@ -23,7 +24,7 @@ export const setupServer = () => {
         }),
         );
 
-    app.use('/contacts', errorHandler, contactsRoutes)
+    app.use('/contacts', authenticate, errorHandler, contactsRoutes)
     app.use('/auth', authRoutes)
 
     app.use(notFoundHandler)

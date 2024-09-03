@@ -26,6 +26,7 @@ export async function getContactsController(req, res) {
 }
 
 export async function getContactController(req, res, next) {
+    console.log(req.user)
 
     const { contactId } = req.params;
     const contact = await getContactById(contactId)
@@ -47,6 +48,7 @@ export async function createContactController (req, res, next) {
         email: req.body.email,
         isFavourite: req.body.isFavourite,
         contactType: req.body.contactType,
+        userId: req.user._id,
     }
     const result = contactSchema.validate(contact, { abortEarly: false })
     const newContact = await createContact(result.value)
