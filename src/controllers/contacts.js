@@ -34,6 +34,10 @@ export async function getContactController(req, res, next) {
     if (contact === null) {
         return next(createHttpError.NotFound("Contact not found"))
     }
+    if (contact.userId.toString() !== req.user._id.toString()) {
+        return next(createHttpError(404, 'Not found'))
+    }
+
     res.send({
         status: 200,
         message: `Successfully found contact with id ${contactId}!`,
@@ -65,8 +69,12 @@ export async function updateContactController(req, res, next) {
         email: req.body.email,
         isFavourite: req.body.isFavourite,
         contactType: req.body.contactType,
+        userId: req.user._id,
     }
     const updatedContact = await updateContact(contactId, contact)
+    if (updatedContact.userId.toString() !== req.user._id.toString()) {
+        return next(createHttpError(404, 'Action is not allowed'))
+    }
 
     res.status(200).send({
         status: 200,
@@ -82,6 +90,9 @@ export async function deleteContactController(req, res, next) {
 
     if (result === null) {
         return next(createHttpError.NotFound('Contact not found'))
+    }
+    if (result.userId.toString() !== req.user._id.toString()) {
+        return next(createHttpError(404, 'Action is not allowed'))
     }
     res.status(204).end();
 }
