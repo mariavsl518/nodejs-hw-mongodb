@@ -35,8 +35,8 @@ export async function getAllContacts({ page, perPage, sortBy, sortOrder, filter,
 
 }
 
-export function getContactById(contactId) {
-    const contact = Contact.findById(contactId);
+export function getContactById(contactId, userId) {
+    const contact = Contact.findOne(contactId, userId);
     return contact
 }
 
@@ -44,11 +44,11 @@ export function createContact(payload) {
     const contact = Contact.create(payload)
     return contact
 }
-
-export function deleteContact(contactId) {
-    return Contact.findByIdAndDelete(contactId)
+export function updateContact(params, payload) {
+    return Contact.findOneAndUpdate(params, payload, {new:true})
 }
 
-export function updateContact(contactId, payload) {
-    return Contact.findByIdAndUpdate(contactId, payload, {new:true})
+export function deleteContact(contactId, userId) {
+    return Contact.findOneAndDelete(contactId, userId)
 }
+

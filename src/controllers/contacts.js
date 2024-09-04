@@ -29,7 +29,7 @@ export async function getContactController(req, res, next) {
     console.log(req.user)
 
     const { contactId } = req.params;
-    const contact = await getContactById(contactId)
+    const contact = await getContactById({contactId, userId:req.user._id })
 
     if (contact === null) {
         return next(createHttpError.NotFound("Contact not found"))
@@ -62,6 +62,9 @@ export async function createContactController (req, res, next) {
 
 export async function updateContactController(req, res, next) {
     const { contactId } = req.params;
+    const userId = req.user._id.toString()
+
+    console.log(contactId, userId);
 
     const contact = {
         name: req.body.name,
@@ -69,10 +72,10 @@ export async function updateContactController(req, res, next) {
         email: req.body.email,
         isFavourite: req.body.isFavourite,
         contactType: req.body.contactType,
-        userId: req.user._id,
     }
-    const updatedContact = await updateContact(contactId, contact)
-    if (updatedContact.userId.toString() !== req.user._id.toString()) {
+    const updatedContact = await updateContact({ _id:contactId, userId}, contact)
+
+    if (updatedContact.userId.toString() !== userId) {
         return next(createHttpError(404, 'Action is not allowed'))
     }
 
@@ -86,15 +89,15 @@ export async function updateContactController(req, res, next) {
 
 export async function deleteContactController(req, res, next) {
     const { contactId } = req.params;
-    const result = await deleteContact(contactId)
+    const userId = req.user._id.toString();
+
+    const result = await deleteContact({ _id:contactId, userId})
 
     if (result === null) {
         return next(createHttpError.NotFound('Contact not found'))
     }
-    if (result.userId.toString() !== req.user._id.toString()) {
+    if (result.userId.toString() !== userId) {
         return next(createHttpError(404, 'Action is not allowed'))
     }
     res.status(204).end();
 }
-
-//branch check
