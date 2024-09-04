@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt'
 import { User } from '../models/user.js'
 import { Session } from '../models/session.js'
 import { ACCESS_TOKEN_TTL , REFRESH_TOKEN_TTL } from '../constants/constants.js'
+import { sendMail } from '../utils/sendMail.js'
+import { SMTP } from '../constants/constants.js'
 
 export async function registerUser(user) {
     const maybeUser = await User.findOne({ email: user.email })
@@ -56,5 +58,17 @@ export async function refreshUserSession (sessionId, refreshToken) {
 
 export async function logoutUser(sessionId) {
     return Session.deleteOne({_id:sessionId})
+}
+
+export async function sendResetEmail(email) {
+    const user = User.findOne({email})
+    if (user === null) {
+        throw createHttpError(404, 'User not found')
+    }
+    sendMail({
+        from: SMTP.FROM_EMAIL,
+        to: email,
+        subject: "Reset your password"
+    })
 }
 
