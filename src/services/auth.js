@@ -36,11 +36,11 @@ export async function loginUser(email, password) {
 
 export async function refreshUserSession (sessionId, refreshToken) {
     const session = await Session.findOne({ _id: sessionId, refreshToken })
-    if (session === null) {
 
+    if (session === null) {
         throw createHttpError(401, 'Session not found')
     }
-    if (new Date > new Date(session.refreshTokenValidUntil)) {
+    if (new Date() > new Date(session.refreshTokenValidUntil)) {
         throw createHttpError(401, 'Refresh token has expired')
     }
     await Session.deleteOne({ _id: sessionId })
