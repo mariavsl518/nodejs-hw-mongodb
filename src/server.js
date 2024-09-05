@@ -1,7 +1,7 @@
-// import pinoHTTP from "pino-http";
+// import path from 'node:path'
 import express from "express";
 import cookieParser from "cookie-parser";
-import cors from 'cors'
+import cors from 'cors';
 import contactsRoutes from "./routers/contacts.js";
 import authRoutes from './routers/auth.js'
 import { authenticate } from "./middlewares/authenticate.js";
@@ -16,13 +16,14 @@ export const setupServer = () => {
     app.use(cookieParser())
 
     // app.use(pinoHTTP())
+    // app.use('/avatars', express.static(path.resolve('src', 'contacts/avatars')))
 
     app.use(
         cors({
             origin: `http://localhost:${PORT}`,
             optionsSuccessStatus: 200,
         }),
-        );
+    );
 
     app.use('/contacts', authenticate, errorHandler, contactsRoutes)
     app.use('/auth', authRoutes)

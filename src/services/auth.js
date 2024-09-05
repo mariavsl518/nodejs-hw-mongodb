@@ -75,12 +75,16 @@ export async function sendResetEmail(email) {
         process.env.JWT_SECRET,
         { expiresIn: '5m' })
 
-    await sendMail({
+    try {
+        await sendMail({
         from: SMTP.FROM_EMAIL,
         to: email,
         subject: "Reset your password",
         html: `<p>Please <a href="https://${process.env.APP_DOMAIN}/reset-password?token=${token}">click</a> to reset your password</p>`
     })
+    } catch (error) {
+        throw createHttpError(500, "Failed to send the email, please try again later.")
+    }
 }
 
 export async function resetPwd(password, token) {

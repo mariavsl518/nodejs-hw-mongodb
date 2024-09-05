@@ -12,7 +12,7 @@ const contactSchema = new mongoose.Schema(
         },
         email: {
             type: String,
-            optional: true,
+            required: false,
         },
         isFavourite: {
             type: Boolean,
@@ -27,7 +27,11 @@ const contactSchema = new mongoose.Schema(
         userId: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
-        }
+        },
+        photo: {
+            type: String,
+            default: null,
+        },
     },
     {
         timestamps: true,

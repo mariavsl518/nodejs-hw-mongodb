@@ -1,3 +1,5 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import {
     createContact,
     getAllContacts,
@@ -10,6 +12,7 @@ import { contactSchema } from '../validation/student.js';
 import { parsePaginationQuery } from '../utils/parsePaginationQuery.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { uploadCloudinary } from '../utils/uploadToCloudinary.js';
 
 export async function getContactsController(req, res) {
     const { page, perPage } = parsePaginationQuery(req.query)
@@ -26,10 +29,9 @@ export async function getContactsController(req, res) {
 }
 
 export async function getContactController(req, res, next) {
-    console.log(req.user)
 
     const { contactId } = req.params;
-    const contact = await getContactById({contactId, userId:req.user._id })
+    const contact = await getContactById({ _id: contactId, userId: req.user._id })
 
     if (contact === null) {
         return next(createHttpError.NotFound("Contact not found"))
@@ -45,7 +47,24 @@ export async function getContactController(req, res, next) {
     })
 }
 
-export async function createContactController (req, res, next) {
+export async function createContactController(req, res) {
+    let photo = null
+
+    if (typeof req.file !== 'undefined') {
+
+        if (process.env.ENABLE_CLOUDINARY === 'true') {
+            const result = await uploadCloudinary(req.file.path)
+            await fs.unlink(req.file.path);
+            photo = result.secure_url
+        }
+        else {
+            await fs.rename(req.file.path,
+            path.resolve('src', 'contacts/avatars',
+            req.file.filename)
+            )
+            photo = `http://localhost:8080/avatars/${req.file.filename}`
+        }
+    }
     const contact = {
         name: req.body.name,
         phoneNumber: req.body.phoneNumber,
@@ -53,6 +72,7 @@ export async function createContactController (req, res, next) {
         isFavourite: req.body.isFavourite,
         contactType: req.body.contactType,
         userId: req.user._id,
+        photo,
     }
     const result = contactSchema.validate(contact, { abortEarly: false })
     const newContact = await createContact(result.value)
@@ -64,7 +84,11 @@ export async function updateContactController(req, res, next) {
     const { contactId } = req.params;
     const userId = req.user._id.toString()
 
-    console.log(contactId, userId);
+    let photo = null
+    if (req.file !== undefined) {
+        await fs.rename(req.file.path, path.resolve('src', 'contacts/avatars', req.file.filename))
+    }
+    photo = `http://localhost:8080/avatars/${req.file.filename}`
 
     const contact = {
         name: req.body.name,
@@ -72,6 +96,7 @@ export async function updateContactController(req, res, next) {
         email: req.body.email,
         isFavourite: req.body.isFavourite,
         contactType: req.body.contactType,
+        photo,
     }
     const updatedContact = await updateContact({ _id:contactId, userId}, contact)
 
