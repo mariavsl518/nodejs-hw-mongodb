@@ -1,4 +1,11 @@
-import { registerUser, loginUser, logoutUser, refreshUserSession, sendResetEmail} from "../services/auth.js"
+import {
+    registerUser,
+    loginUser,
+    logoutUser,
+    refreshUserSession,
+    sendResetEmail,
+    resetPwd,
+} from "../services/auth.js"
 
 export async function registerController(req, res) {
     const user = {
@@ -74,5 +81,21 @@ export async function sendResetEmailController(req, res) {
 
     await sendResetEmail(email)
 
-    res.send('Request reset email')
+    res.send({
+        status: 200,
+        message: "Reset email has been sent successfully",
+        data: {}
+    })
+}
+
+export async function resetPwdController(req, res) {
+    const { password, token } = req.body
+
+    await resetPwd(password, token)
+
+    res.send(   {
+       status: 200,
+       message: "Password has been successfully reset.",
+       data: {}
+   })
 }

@@ -2,6 +2,6 @@ export async function notFoundHandler(req, res, next) {
 
         res.status(404).send({
             status: 404,
-            message: 'Not found',
+            message: "Not found",
         })
 }
