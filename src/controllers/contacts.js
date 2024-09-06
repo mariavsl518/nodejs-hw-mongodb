@@ -37,7 +37,7 @@ export async function getContactController(req, res, next) {
         return next(createHttpError.NotFound("Contact not found"))
     }
     if (contact.userId.toString() !== req.user._id.toString()) {
-        return next(createHttpError(404, 'Not found'))
+        return next(createHttpError(404, 'Contact not found'))
     }
 
     res.send({

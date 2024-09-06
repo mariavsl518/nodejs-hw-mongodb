@@ -1,0 +1,43 @@
+type: object
+required:
+  - _id
+  - name
+  - phoneNumber
+  - email
+  - contactType
+  - isFavourite
+  - userId
+  - photo
+properties:
+  _id:
+    description: 'Contact ID'
+    type: string
+    example: 66d9bd6a3b0b0e7e161e1330
+  name:
+    description: 'Contact name'
+    type: string
+    example: 'Olivia Prijma'
+  phoneNumber:
+    description: 'Phone number'
+    type: string
+    example: '+420774839319'
+  email:
+    description: 'Email'
+    type: string
+    example: 'example@mail.com'
+  isFavourite:
+    description: 'Value: true/false'
+    type: string
+    example: 'true'
+  contactType:
+    description: 'The value can be home/work/personal'
+    type: string
+    example: 'personal'
+  userId:
+    description: 'Id of the parent user'
+    type: string
+    example: 66d0e811fb991a743036f812
+  photo:
+    description: 'You can add photo to a contact'
+    type: string
+    example: 'https://res.cloudinary.com/do9xmehmv/image/upload/v1725569778/vpril08bt4zyijy4k5bg.jpg'

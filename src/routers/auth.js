@@ -13,7 +13,7 @@ import {
     refreshController,
     logoutController,
     sendResetEmailController,
-    resetPwdController
+    resetPwdController,
 } from '../controllers/auth.js';
 
 const router = express.Router();

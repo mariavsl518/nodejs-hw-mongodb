@@ -1,4 +1,3 @@
-// import path from 'node:path'
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from 'cors';
@@ -7,6 +6,7 @@ import authRoutes from './routers/auth.js'
 import { authenticate } from "./middlewares/authenticate.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import { swaggerDocs } from "./middlewares/swaggerDocs.js";
 
 export const setupServer = () => {
 
@@ -15,9 +15,6 @@ export const setupServer = () => {
 
     app.use(cookieParser())
 
-    // app.use(pinoHTTP())
-    // app.use('/avatars', express.static(path.resolve('src', 'contacts/avatars')))
-
     app.use(
         cors({
             origin: `http://localhost:${PORT}`,
@@ -25,6 +22,7 @@ export const setupServer = () => {
         }),
     );
 
+    app.use('/api-docs', swaggerDocs())
     app.use('/contacts', authenticate, errorHandler, contactsRoutes)
     app.use('/auth', authRoutes)
 
@@ -33,7 +31,6 @@ export const setupServer = () => {
 
     app.listen(PORT, () =>{
            console.log(`Server is runnimg on port ${PORT}`)
-
         })
 
 }

@@ -1,0 +1,77 @@
+tags:
+  - Contacts
+summary: Create contact
+operationId: createContact
+description: Here you can add new contacts
+security:
+  - bearerAuth: []
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        required:
+          - name
+          - phoneNumber
+          - contactType
+        properties:
+          name:
+            description: 'Contact name'
+            type: string
+            example: 'Olivia Prijma'
+          phoneNumber:
+            description: 'Phone number'
+            type: string
+            example: '+420774839319'
+          email:
+            description: 'Email'
+            type: string
+            example: 'example@mail.com'
+          isFavourite:
+            description: 'Is the contact favourite'
+            type: boolean
+            example: 'true'
+          contactType:
+            description: 'Is the contact favourite'
+            type: boolean
+            example: 'true/false'
+          photo:
+            description: 'Avatar or contact picture'
+            type: string
+responses:
+  '201':
+    description: 'The successfull'
+    content:
+      aplication/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: 'Successfully created a contact!'
+            data:
+              $ref: ../../components/schemas/contacts.yaml
+  '401':
+    description: Authorisation error
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: UnauthorizedError
+            data:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  example: 'Access token expired'
