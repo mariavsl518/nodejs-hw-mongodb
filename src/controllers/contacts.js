@@ -85,11 +85,21 @@ export async function updateContactController(req, res, next) {
     const userId = req.user._id.toString()
 
     let photo = null
-    if (req.file !== undefined) {
-        await fs.rename(req.file.path, path.resolve('src', 'contacts/avatars', req.file.filename))
-    }
-    photo = `http://localhost:8080/avatars/${req.file.filename}`
 
+    if (req.file !== undefined) {
+        if (process.env.ENABLE_CLOUDINARY === 'true') {
+            const result = await uploadCloudinary(req.file.path)
+            await fs.unlink(req.file.path);
+            photo = result.secure_url
+        }
+        else {
+            await fs.rename(req.file.path,
+            path.resolve('src', 'contacts/avatars',
+            req.file.filename)
+            )
+            photo = `http://localhost:8080/avatars/${req.file.filename}`
+        }
+    }
     const contact = {
         name: req.body.name,
         phoneNumber: req.body.phoneNumber,
