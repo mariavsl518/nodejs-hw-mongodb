@@ -66,7 +66,6 @@ export async function sendResetEmail(email) {
     if (user === null) {
         throw createHttpError(404, 'User not found')
     }
-    console.log(user);
     const token = jwt.sign(
     {
         sub: user._id,

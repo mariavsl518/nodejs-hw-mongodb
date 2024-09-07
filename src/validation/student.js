@@ -10,4 +10,14 @@ const contactSchema = Joi.object({
 
 })
 
-export {contactSchema}
+const updateContactSchema = Joi.object({
+
+    name: Joi.string().min(3).max(20).messages(),
+    phoneNumber: Joi.string().min(3).max(20),
+    email: Joi.string().min(3).max(20).optional(true),
+    isFavourite: Joi.boolean().default(false),
+    contactType: Joi.string().min(3).max(20),
+
+})
+
+export {contactSchema, updateContactSchema}
