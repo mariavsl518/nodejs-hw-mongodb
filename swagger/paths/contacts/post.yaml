@@ -38,6 +38,7 @@ requestBody:
           photo:
             description: 'Avatar or contact picture'
             type: string
+            format: binary
 responses:
   '201':
     description: 'The successfull'
